@@ -1,0 +1,87 @@
+parameters:
+    log_file: %kernel.logs_dir%/%kernel.environment%.log
+
+framework:
+    assets: ~
+    translator:      { fallback: en }
+    secret:          suchsecretverywowmuchsecure
+    router:
+        resource: "%kernel.root_dir%/routing.yml"
+#        strict_requirements: %kernel.debug%
+#    form:            true
+#    csrf_protection: false
+#    validation:      { enable_annotations: true }
+#    templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
+#    default_locale:  %locale%
+#    trusted_proxies: ~
+#    session:
+#        handler_id: session.handler.pdo
+#        cookie_lifetime: 31536000 # 365 days
+        #cookie_httponly: true
+        #cookie_secure: true
+
+hmlb_ddd:
+    db_driver: orm
+
+hmlb_user:
+    user_class: ~
+
+services:
+    annotation_reader:
+        class: Doctrine\Common\Annotations\AnnotationReader
+
+doctrine:
+    dbal:
+        driver: pdo_sqlite
+        path: :memory:
+        memory: true
+    orm:
+        entity_managers:
+            default:
+                connection: default
+
+command_bus:
+    command_name_resolver_strategy: class_based
+    logging: ~
+
+event_bus:
+    event_name_resolver_strategy: named_message
+    logging: ~
+
+monolog:
+    handlers:
+        main:
+            type:  stream
+            path:  %log_file%
+            level: debug
+
+security:
+    encoders:
+        HMLB\UserBundle\User\User: sha512
+    providers:
+        hmlb_user:
+            id: hmlb_user.provider
+    firewalls:
+        login:
+            pattern:  ^/login
+            stateless: true
+            anonymous: true
+            form_login:
+                provider: hmlb_user
+                check_path:               /login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+
+        api:
+            pattern:   ^/
+            stateless: true
+            provider: hmlb_user
+            lexik_jwt: ~
+
+
+lexik_jwt_authentication:
+    private_key_path: %kernel.root_dir%/../var/jwt/private.pem
+    public_key_path:  %kernel.root_dir%/../var/jwt/public.pem
+    pass_phrase:      1234
+    token_ttl:        3600

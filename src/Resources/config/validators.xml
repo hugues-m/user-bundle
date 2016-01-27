@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!-- Validators -->
+        <service id="hmlb_user.validator.unused_username"
+                 class="HMLB\UserBundle\Validator\Constraint\UnusedUsernameValidator">
+            <argument type="service" id="om"/>
+            <argument>%hmlb_user.user_class%</argument>
+            <tag name="validator.constraint_validator" alias="hmlb_user.unused_username"/>
+        </service>
+    </services>
+</container>

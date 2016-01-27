@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <imports>
+        <import resource="forms.xml"/>
+        <import resource="handlers.xml"/>
+        <import resource="validators.xml"/>
+        <import resource="messages.xml"/>
+    </imports>
+
+    <services>
+        <service id="hmlb_user.repository.user" alias="hmlb_user.repository.doctrine.orm_user"/>
+
+        <service id="hmlb_user.login_manager" class="HMLB\UserBundle\Security\LoginManager">
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="security.user_checker"/>
+            <argument type="service" id="security.authentication.session_strategy"/>
+            <argument type="service" id="request_stack"/>
+            <!--
+            <argument type="service" id="security.authentication.rememberme.services.persistent" strict="false" on-invalid="null"/>
+            <argument type="service" id="security.authentication.rememberme.services.simplehash" strict="false" on-invalid="null"/>
+            -->
+        </service>
+
+        <service id="hmlb_user.repository.doctrine.mongo_user"
+                 public="false"
+                 class="HMLB\UserBundle\Doctrine\ODM\MongoUserRepository"
+                 parent="hmlb_ddd.repository.doctrine">
+            <argument type="service" id="security.token_storage"/>
+            <argument>%hmlb_user.user_class%</argument>
+        </service>
+        <service id="hmlb_user.repository.doctrine.orm_user"
+                 public="false"
+                 class="HMLB\UserBundle\Doctrine\ORM\DBALUserRepository"
+                 parent="hmlb_ddd.repository.doctrine">
+            <argument type="service" id="security.token_storage"/>
+            <argument>%hmlb_user.user_class%</argument>
+        </service>
+        <service id="hmlb_user.provider" class="HMLB\UserBundle\Security\UserProvider">
+            <argument type="service" id="hmlb_user.repository.user"/>
+        </service>
+
+    </services>
+</container>

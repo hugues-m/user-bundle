@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+
+        <!-- MiddleWares -->
+        <!-- CommandBus MiddleWares -->
+        <service id="hmlb_user.command_bus.middleware.traces_messages"
+                 class="HMLB\UserBundle\MessageBus\Middleware\TracesMessages"
+                 public="false">
+            <argument type="service" id="logger"/>
+            <tag name="command_bus_middleware" priority="200"/>
+            <tag name="monolog.logger" channel="command_bus"/>
+        </service>
+
+
+        <!-- EventBus MiddleWares -->
+        <service id="hmlb_user.event_bus.middleware.traces_messages"
+                 class="HMLB\UserBundle\MessageBus\Middleware\TracesMessages"
+                 public="false">
+            <argument type="service" id="logger"/>
+            <tag name="event_bus_middleware" priority="200"/>
+            <tag name="monolog.logger" channel="event_bus"/>
+        </service>
+
+    </services>
+</container>

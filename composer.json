@@ -1,0 +1,65 @@
+{
+  "name": "hmlb/userbundle",
+  "description": "Opinionated domain driven designed user Bundle for Symfony2.",
+  "type": "library",
+  "keywords": [
+    "hmlb",
+    "DDD",
+    "UserBundle",
+    "domain driven design",
+    "command bus",
+    "php"
+  ],
+  "authors": [
+    {
+      "name": "Hugues Maignol",
+      "email": "hugues@hmlb.fr",
+      "homepage": "https://www.hmlb.fr"
+    }
+  ],
+  "homepage": "https://github.com/hmlb/userbundle",
+  "license": "MIT",
+  "require": {
+    "php": "~7.0",
+    "hmlb/ddd": "~1.0@dev",
+    "hmlb/ddd-bundle": "~1.0@dev",
+    "simple-bus/message-bus": "~2.1",
+    "simple-bus/symfony-bridge": "~4.0",
+    "symfony/http-kernel": "~3.0",
+    "symfony/dependency-injection": "~3.0",
+    "symfony/yaml": "~3.0",
+    "symfony/validator": "~3.0",
+    "symfony/form": "~3.0",
+    "symfony/options-resolver": "~3.0",
+    "symfony/security-bundle": "~3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0",
+    "phpspec/phpspec": "~2.3",
+    "satooshi/php-coveralls": "~0.7@dev",
+    "psr/log": "1.0.0",
+    "simple-bus/doctrine-orm-bridge": "~4.0",
+    "doctrine/orm": "~2.5",
+    "doctrine/doctrine-bundle": "~1.0",
+    "symfony/monolog-bundle": "~2.8",
+    "matthiasnoback/symfony-config-test": "~1.3",
+    "matthiasnoback/symfony-dependency-injection-test": "~0.7",
+    "lexik/jwt-authentication-bundle": "~1.4"
+  },
+  "config": {
+    "bin-dir": "bin"
+  },
+  "autoload": {
+    "psr-4" : { "HMLB\\UserBundle\\" : "src" }
+  },
+  "autoload-dev": {
+    "psr-4" : { "HMLB\\UserBundle\\Tests\\" : "tests" }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
+}
