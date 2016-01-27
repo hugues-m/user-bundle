@@ -3,6 +3,7 @@
 namespace HMLB\UserBundle\Tests;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use HMLB\UserBundle\Tests\Functional\TestKernel;
 use HMLB\UserBundle\User\User;
 use PHPUnit_Framework_TestCase;
@@ -35,8 +36,10 @@ class UserBundleTest extends PHPUnit_Framework_TestCase
     public function mappingsAreLoaded()
     {
         $doctrine = $this->container->get('doctrine');
+        /** @var EntityManager $em */
         $em = $doctrine->getManager();
         $this->assertInstanceOf(EntityManager::class, $em);
+        $this->assertInstanceOf(EntityRepository::class, $em->getRepository(User::class));
     }
 
     /**

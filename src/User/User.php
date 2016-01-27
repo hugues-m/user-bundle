@@ -150,7 +150,8 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
         $plainPassword,
         UserPasswordEncoderInterface $encoder,
         array $roles = ['ROLE_USER']
-    ): self {
+    ): User
+    {
         $user = new self($username, $email, $plainPassword, $encoder, $roles);
         $user->recordUserRegistered();
         $user->enabled = true;
@@ -212,11 +213,9 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     /**
      * {@inheritdoc}
      */
-    public function eraseCredentials(): self
+    public function eraseCredentials()
     {
         //No-op
-
-        return $this;
     }
 
     /**
@@ -271,15 +270,11 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     {
         $this->enabled = true;
         $this->confirmationToken = null;
-
-        return $this;
     }
 
     public function disable()
     {
         $this->enabled = false;
-
-        return $this;
     }
 
     /**
@@ -296,46 +291,40 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
      *
      * @param string $email
      *
-     * @return self
+     * @return void
      */
-    public function changeEmail(string $email): self
+    public function changeEmail(string $email)
     {
         $oldEmail = $this->email;
         $this->email = $email;
         $this->emailCanonical = self::canonicalize($this->email);
         $this->updated = new DateTime();
         $this->record(new EmailChanged($this->getId(), $oldEmail, $this->email));
-
-        return $this;
     }
 
     /**
      * @param string                       $password
      * @param UserPasswordEncoderInterface $encoder
      *
-     * @return self
+     * @return void
      */
-    public function changePassword(string $password, UserPasswordEncoderInterface $encoder): self
+    public function changePassword(string $password, UserPasswordEncoderInterface $encoder)
     {
         $oldPassword = $this->password;
         $this->updatePassword($password, $encoder);
         $this->updated = new DateTime();
         $this->record(new PasswordChanged($this->id, $oldPassword, $password));
-
-        return $this;
     }
 
     /**
      * @param string                       $plainPassword
      * @param UserPasswordEncoderInterface $encoder
      *
-     * @return self
+     * @return void
      */
     private function updatePassword(string $plainPassword, UserPasswordEncoderInterface $encoder)
     {
         $this->password = $encoder->encodePassword($this, $plainPassword);
-
-        return $this;
     }
 
     /**

@@ -39,7 +39,7 @@ class DBALUserRepository extends AbstractORMRepository implements UserRepository
     /**
      * {@inheritdoc}
      */
-    public function getCurrentUser()
+    public function getCurrentUser(): User
     {
         $token = $this->tokenStorage->getToken();
         if (!$token) {
@@ -56,7 +56,7 @@ class DBALUserRepository extends AbstractORMRepository implements UserRepository
     /**
      * {@inheritdoc}
      */
-    public function getByUsername($username)
+    public function getByUsername($username): User
     {
         $user = $this->getOneBy(['username' => $username]);
         if (!$user instanceof User) {
@@ -71,7 +71,7 @@ class DBALUserRepository extends AbstractORMRepository implements UserRepository
      *
      * @return User
      */
-    public function get(Identity $identity)
+    public function get(Identity $identity): User
     {
         return $this->entityRepository->find($identity);
     }
@@ -79,7 +79,7 @@ class DBALUserRepository extends AbstractORMRepository implements UserRepository
     /**
      * {@inheritdoc}
      */
-    public function getClassName()
+    public function getClassName(): string
     {
         return $this->class;
     }

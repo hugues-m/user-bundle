@@ -23,8 +23,7 @@ framework:
 hmlb_ddd:
     db_driver: orm
 
-hmlb_user:
-    user_class: ~
+#hmlb_user:
 
 services:
     annotation_reader:
