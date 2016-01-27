@@ -1,5 +1,5 @@
 {
-  "name": "hmlb/userbundle",
+  "name": "hmlb/user-bundle",
   "description": "Opinionated domain driven designed user Bundle for Symfony2.",
   "type": "library",
   "keywords": [
@@ -17,7 +17,7 @@
       "homepage": "https://www.hmlb.fr"
     }
   ],
-  "homepage": "https://github.com/hmlb/userbundle",
+  "homepage": "https://github.com/hmlb/user-bundle",
   "license": "MIT",
   "require": {
     "php": "~7.0",
