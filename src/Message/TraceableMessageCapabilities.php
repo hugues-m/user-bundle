@@ -13,7 +13,7 @@ trait TraceableMessageCapabilities
     /**
      * @var Trace
      */
-    private $messageTrace;
+    protected $messageTrace;
 
     /**
      * {@inheritdoc}

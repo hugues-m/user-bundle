@@ -23,7 +23,8 @@ framework:
 hmlb_ddd:
     db_driver: orm
 
-#hmlb_user:
+hmlb_user:
+    user_class: HMLB\UserBundle\Tests\Model\CustomUser
 
 services:
     annotation_reader:
@@ -38,14 +39,13 @@ doctrine:
         entity_managers:
             default:
                 connection: default
-
-command_bus:
-    command_name_resolver_strategy: class_based
-    logging: ~
-
-event_bus:
-    event_name_resolver_strategy: named_message
-    logging: ~
+                mappings:
+                    HMLBUserBundleTests:
+                        mapping:              true
+                        type:                 xml
+                        dir:                  %kernel.root_dir%/doctrine
+                        prefix:               HMLB\UserBundle\Tests
+                        is_bundle:            false
 
 monolog:
     handlers:
@@ -71,7 +71,6 @@ security:
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
                 require_previous_session: false
-
         api:
             pattern:   ^/
             stateless: true

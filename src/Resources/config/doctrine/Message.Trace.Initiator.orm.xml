@@ -4,8 +4,8 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                    https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
     <embeddable name="HMLB\UserBundle\Message\Trace\Initiator">
-        <field name="id" type="ddd_identity" column="id" nullable="false"/>
-        <field name="username" type="string" length="100" nullable="false"/>
+        <field name="id" type="ddd_identity" column="id" nullable="true"/>
+        <field name="username" type="string" length="100" nullable="true"/>
         <field name="email" type="string" nullable="true"/>
     </embeddable>
 </doctrine-mapping>

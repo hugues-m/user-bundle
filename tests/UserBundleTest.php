@@ -5,6 +5,7 @@ namespace HMLB\UserBundle\Tests;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use HMLB\UserBundle\Tests\Functional\TestKernel;
+use HMLB\UserBundle\Tests\Model\CustomUser;
 use HMLB\UserBundle\User\User;
 use PHPUnit_Framework_TestCase;
 use Symfony\Bundle\FrameworkBundle\Test;
@@ -60,10 +61,7 @@ class UserBundleTest extends PHPUnit_Framework_TestCase
     public static function expectedInitialParameters()
     {
         return [
-            [
-                'hmlb_user.user_class',
-                User::class,
-            ],
+            ['hmlb_user.user_class', CustomUser::class],
         ];
     }
 }

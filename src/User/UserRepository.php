@@ -2,6 +2,7 @@
 
 namespace HMLB\UserBundle\User;
 
+use HMLB\DDD\Entity\Identity;
 use HMLB\DDD\Entity\Repository;
 use HMLB\DDD\Exception\AggregateRootNotFoundException;
 
@@ -18,6 +19,13 @@ interface UserRepository extends Repository
      * @throws AggregateRootNotFoundException
      */
     public function getCurrentUser(): User;
+
+    /**
+     * @param Identity $identity
+     *
+     * @return User
+     */
+    public function get(Identity $identity): User;
 
     /**
      * @param string $username

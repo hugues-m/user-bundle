@@ -150,8 +150,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
         $plainPassword,
         UserPasswordEncoderInterface $encoder,
         array $roles = ['ROLE_USER']
-    ): User
-    {
+    ): User {
         $user = new self($username, $email, $plainPassword, $encoder, $roles);
         $user->recordUserRegistered();
         $user->enabled = true;
@@ -290,8 +289,6 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
      * Change the email address of the user.
      *
      * @param string $email
-     *
-     * @return void
      */
     public function changeEmail(string $email)
     {
@@ -305,8 +302,6 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     /**
      * @param string                       $password
      * @param UserPasswordEncoderInterface $encoder
-     *
-     * @return void
      */
     public function changePassword(string $password, UserPasswordEncoderInterface $encoder)
     {
@@ -319,8 +314,6 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     /**
      * @param string                       $plainPassword
      * @param UserPasswordEncoderInterface $encoder
-     *
-     * @return void
      */
     private function updatePassword(string $plainPassword, UserPasswordEncoderInterface $encoder)
     {

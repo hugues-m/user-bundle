@@ -3,6 +3,7 @@
 namespace HMLB\UserBundle\Message\Trace;
 
 use DateTime;
+use HMLB\UserBundle\Exception\Exception;
 use HMLB\UserBundle\User\User;
 
 /**
@@ -23,12 +24,19 @@ class Trace
     private $initiator;
 
     /**
+     * @var Context
+     */
+    private $context;
+
+    /**
      * Trace constructor.
      *
+     * @param Context   $context
      * @param User|null $initiatingUser
      */
-    public function __construct(User $initiatingUser = null)
+    private function __construct(Context $context, User $initiatingUser = null)
     {
+        $this->context = $context;
         $this->initiated = new DateTime();
         if ($initiatingUser) {
             $this->initiator = Initiator::fromUser($initiatingUser);
@@ -36,7 +44,46 @@ class Trace
     }
 
     /**
-     * Getter de initiated.
+     * Message trace when a message has been initiated by a domain user.
+     *
+     * @param User $initiatingUser
+     *
+     * @return Trace
+     */
+    public static function user(User $initiatingUser)
+    {
+        return new self(new Context(), $initiatingUser);
+    }
+
+    /**
+     * Message trace when a message has been initiated by php CLI interface.
+     *
+     * @return Trace
+     *
+     * @throws Exception
+     */
+    public static function cli()
+    {
+        $context = new Context();
+        if (!$context->isCli()) {
+            throw new Exception('Not in php CLI context');
+        }
+
+        return new self($context);
+    }
+
+    /**
+     * Trace Context.
+     *
+     * @return Context
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /**
+     * Message initiation date.
      *
      * @return DateTime
      */

@@ -11,6 +11,7 @@
                  class="HMLB\UserBundle\MessageBus\Middleware\TracesMessages"
                  public="false">
             <argument type="service" id="logger"/>
+            <argument type="service" id="hmlb_user.repository.user"/>
             <tag name="command_bus_middleware" priority="200"/>
             <tag name="monolog.logger" channel="command_bus"/>
         </service>
@@ -21,6 +22,7 @@
                  class="HMLB\UserBundle\MessageBus\Middleware\TracesMessages"
                  public="false">
             <argument type="service" id="logger"/>
+            <argument type="service" id="hmlb_user.repository.user"/>
             <tag name="event_bus_middleware" priority="200"/>
             <tag name="monolog.logger" channel="event_bus"/>
         </service>

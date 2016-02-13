@@ -2,8 +2,11 @@
 
 namespace HMLB\UserBundle\MessageBus\Middleware;
 
+use HMLB\DDD\Exception\AggregateRootNotFoundException;
 use HMLB\DDD\Message\Message;
+use HMLB\UserBundle\Message\Trace\Trace;
 use HMLB\UserBundle\Message\TraceableMessage;
+use HMLB\UserBundle\User\UserRepository;
 use Psr\Log\LoggerInterface;
 use SimpleBus\Message\Bus\Middleware\MessageBusMiddleware;
 
@@ -19,9 +22,15 @@ class TracesMessages implements MessageBusMiddleware
      */
     private $logger;
 
-    public function __construct(LoggerInterface $logger)
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    public function __construct(LoggerInterface $logger, UserRepository $userRepository)
     {
         $this->logger = $logger;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -39,8 +48,20 @@ class TracesMessages implements MessageBusMiddleware
         $next($message);
     }
 
+    /**
+     * Adds a message trace to the message.
+     *
+     * @param TraceableMessage $message
+     */
     private function traceMessage(TraceableMessage $message)
     {
-        var_dump($_ENV);
+        try {
+            $user = $this->userRepository->getCurrentUser();
+            $trace = Trace::user($user);
+        } catch (AggregateRootNotFoundException $e) {
+            $trace = Trace::cli();
+        }
+
+        $message->trace($trace);
     }
 }
