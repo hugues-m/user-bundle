@@ -4,22 +4,22 @@ namespace HMLB\UserBundle\Event;
 
 use HMLB\DDD\Entity\Identity;
 
-class EmailChanged extends UserEvent
+final class EmailChanged extends UserEvent
 {
     /**
      * @var Identity
      */
-    protected $userId;
+    private $userId;
 
     /**
      * @var string
      */
-    protected $oldEmail;
+    private $oldEmail;
 
     /**
      * @var string
      */
-    protected $newEmail;
+    private $newEmail;
 
     public function __construct(Identity $userId, string $oldEmail, string $newEmail)
     {

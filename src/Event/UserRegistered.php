@@ -4,22 +4,22 @@ namespace HMLB\UserBundle\Event;
 
 use HMLB\DDD\Entity\Identity;
 
-class UserRegistered extends UserEvent
+final class UserRegistered extends UserEvent
 {
     /**
      * @var Identity
      */
-    protected $userId;
+    private $userId;
 
     /**
      * @var string
      */
-    protected $email;
+    private $email;
 
     /**
      * @var string
      */
-    protected $username;
+    private $username;
 
     public function __construct(Identity $userId, string $email, string $username)
     {

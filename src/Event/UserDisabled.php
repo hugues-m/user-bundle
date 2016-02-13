@@ -9,22 +9,22 @@ use HMLB\DDD\Entity\Identity;
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
-class UserDisabled extends UserEvent
+final class UserDisabled extends UserEvent
 {
     /**
      * @var Identity
      */
-    protected $userId;
+    private $userId;
 
     /**
      * @var string
      */
-    protected $email;
+    private $email;
 
     /**
      * @var string
      */
-    protected $username;
+    private $username;
 
     public function __construct(Identity $userId, string $email, string $username)
     {

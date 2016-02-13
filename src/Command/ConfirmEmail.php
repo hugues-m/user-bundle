@@ -5,34 +5,34 @@ namespace HMLB\UserBundle\Command;
 use HMLB\DDD\Entity\Identity;
 
 /**
- * ChangeEmail.
+ * Confirm that an email adress is owned by the User.
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
-final class ChangeEmail extends UserCommand
+final class ConfirmEmail extends UserCommand
 {
     /**
      * @var string
      */
-    private $email;
+    private $confirmationToken;
 
     /**
      * @var Identity
      */
     private $userId;
 
-    public function __construct(string $email, Identity $userId)
+    public function __construct(string $confirmationToken, Identity $userId)
     {
-        $this->email = $email;
+        $this->confirmationToken = $confirmationToken;
         $this->userId = $userId;
     }
 
     /**
      * @return string
      */
-    public function getEmail(): string
+    public function getConfirmationToken(): string
     {
-        return $this->email;
+        return $this->confirmationToken;
     }
 
     /**

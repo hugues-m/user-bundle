@@ -150,7 +150,8 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
         $plainPassword,
         UserPasswordEncoderInterface $encoder,
         array $roles = ['ROLE_USER']
-    ): User {
+    ): User
+    {
         $user = new static($username, $email, $plainPassword, $encoder, $roles);
         $user->recordUserRegistered();
         $user->enabled = true;
@@ -292,6 +293,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
      */
     public function changeEmail(string $email)
     {
+        Assertion::email($email);
         $oldEmail = $this->email;
         $this->email = $email;
         $this->emailCanonical = self::canonicalize($this->email);

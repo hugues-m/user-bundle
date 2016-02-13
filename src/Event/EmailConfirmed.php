@@ -1,36 +1,39 @@
 <?php
 
-namespace HMLB\UserBundle\Command;
+namespace src\Event;
 
 use HMLB\DDD\Entity\Identity;
+use HMLB\UserBundle\Event\UserEvent;
 
 /**
- * ChangeEmail.
+ * EmailConfirmed
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
-final class ChangeEmail extends UserCommand
+final class EmailConfirmed extends UserEvent
 {
-    /**
-     * @var string
-     */
-    private $email;
-
     /**
      * @var Identity
      */
     private $userId;
 
-    public function __construct(string $email, Identity $userId)
+    /**
+     * @var string
+     */
+    private $email;
+
+    public function __construct(Identity $userId, string $email)
     {
-        $this->email = $email;
         $this->userId = $userId;
+        $this->email = $email;
     }
 
     /**
+     * Getter de email
+     *
      * @return string
      */
-    public function getEmail(): string
+    public function getEmail()
     {
         return $this->email;
     }

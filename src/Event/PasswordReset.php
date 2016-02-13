@@ -1,10 +1,16 @@
 <?php
 
-namespace HMLB\UserBundle\Event;
+namespace src\Event;
 
 use HMLB\DDD\Entity\Identity;
+use HMLB\UserBundle\Event\UserEvent;
 
-final class PasswordChanged extends UserEvent
+/**
+ * PasswordReset
+ *
+ * @author Hugues Maignol <hugues@hmlb.fr>
+ */
+final class PasswordReset extends UserEvent
 {
     /**
      * @var Identity

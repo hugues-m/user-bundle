@@ -9,7 +9,7 @@ use HMLB\DDD\Entity\Identity;
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
-class RegisterUser extends UserCommand
+final class RegisterUser extends UserCommand
 {
     /**
      * Identity of the registered user.
