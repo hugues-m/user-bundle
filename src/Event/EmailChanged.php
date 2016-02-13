@@ -10,6 +10,7 @@ class EmailChanged extends UserEvent
      * @var Identity
      */
     protected $userId;
+
     /**
      * @var string
      */

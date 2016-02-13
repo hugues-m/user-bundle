@@ -16,7 +16,7 @@ class RegisterUser extends UserCommand
      *
      * @var Identity
      */
-    private $userIdentity;
+    private $userId;
 
     /**
      * @var string
@@ -52,7 +52,7 @@ class RegisterUser extends UserCommand
         $this->email = $email;
         $this->roles = $roles;
         $this->password = $password;
-        $this->userIdentity = new Identity();
+        $this->userId = new Identity();
     }
 
     /**

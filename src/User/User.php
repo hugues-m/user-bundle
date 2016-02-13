@@ -151,7 +151,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
         UserPasswordEncoderInterface $encoder,
         array $roles = ['ROLE_USER']
     ): User {
-        $user = new self($username, $email, $plainPassword, $encoder, $roles);
+        $user = new static($username, $email, $plainPassword, $encoder, $roles);
         $user->recordUserRegistered();
         $user->enabled = true;
 

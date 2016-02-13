@@ -19,12 +19,12 @@ class ChangePassword extends UserCommand
     /**
      * @var Identity
      */
-    protected $user;
+    protected $userId;
 
-    public function __construct(string $password, Identity $user)
+    public function __construct(string $password, Identity $userId)
     {
         $this->password = $password;
-        $this->user = $user;
+        $this->userId = $userId;
     }
 
     /**
@@ -38,8 +38,8 @@ class ChangePassword extends UserCommand
     /**
      * @return Identity
      */
-    public function getUser(): Identity
+    public function getUserId(): Identity
     {
-        return $this->user;
+        return $this->userId;
     }
 }

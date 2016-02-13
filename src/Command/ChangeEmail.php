@@ -19,12 +19,12 @@ class ChangeEmail extends UserCommand
     /**
      * @var Identity
      */
-    protected $user;
+    protected $userId;
 
-    public function __construct(string $email, Identity $user)
+    public function __construct(string $email, Identity $userId)
     {
         $this->email = $email;
-        $this->user = $user;
+        $this->userId = $userId;
     }
 
     /**
@@ -38,8 +38,8 @@ class ChangeEmail extends UserCommand
     /**
      * @return Identity
      */
-    public function getUser(): Identity
+    public function getUserId(): Identity
     {
-        return $this->user;
+        return $this->userId;
     }
 }

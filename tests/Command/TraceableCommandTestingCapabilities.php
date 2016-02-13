@@ -17,6 +17,11 @@ use SimpleBus\Message\Bus\MessageBus;
  */
 trait TraceableCommandTestingCapabilities
 {
+    /**
+     * @param MessageBus                  $commandBus
+     * @param PersistentMessage           $command
+     * @param PersistentCommandRepository $commandRepository
+     */
     protected function handleCommandAndAssertTraced(
         MessageBus $commandBus,
         PersistentMessage $command,

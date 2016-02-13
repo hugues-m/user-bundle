@@ -19,21 +19,13 @@ class PasswordChanged extends UserEvent
     /**
      * @var string
      */
-    protected $plainPassword;
+    protected $newPassword;
 
-    public function __construct(Identity $userId, string $oldPassword, string $plainPassword)
+    public function __construct(Identity $userId, string $oldPassword, string $newPassword)
     {
         $this->userId = $userId;
         $this->oldPassword = $oldPassword;
-        $this->plainPassword = $plainPassword;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPlainPassword(): string
-    {
-        return $this->plainPassword;
+        $this->newPassword = $newPassword;
     }
 
     /**
@@ -42,6 +34,14 @@ class PasswordChanged extends UserEvent
     public function getOldPassword(): string
     {
         return $this->oldPassword;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNewPassword(): string
+    {
+        return $this->newPassword;
     }
 
     /**
