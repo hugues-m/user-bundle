@@ -4,9 +4,9 @@ namespace HMLB\UserBundle\Handler;
 
 use HMLB\DDD\Message\Command\Command;
 use HMLB\DDD\Message\Command\Handler;
-use HMLB\UserBundle\User\UserRepository;
 use HMLB\UserBundle\Command\ChangeEmail;
 use HMLB\UserBundle\User\User;
+use HMLB\UserBundle\User\UserRepository;
 
 class ChangeEmailHandler implements Handler
 {
@@ -29,7 +29,7 @@ class ChangeEmailHandler implements Handler
     public function handle(Command $command)
     {
         /** @var User $user */
-        $user = $this->userRepository->get($command->getUser());
+        $user = $this->userRepository->get($command->getUserId());
         //No-op if email is same as existing
         if ($user->getEmail() == $command->getEmail()) {
             return;
