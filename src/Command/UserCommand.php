@@ -3,7 +3,7 @@
 namespace HMLB\UserBundle\Command;
 
 use HMLB\DDD\Message\Command\PersistentCommand;
-use HMLB\UserBundle\Message\TraceableMessage;
+use HMLB\UserBundle\Message\TraceableCommand;
 use HMLB\UserBundle\Message\TraceableMessageCapabilities;
 
 /**
@@ -11,7 +11,7 @@ use HMLB\UserBundle\Message\TraceableMessageCapabilities;
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
-class UserCommand extends PersistentCommand implements TraceableMessage
+class UserCommand extends PersistentCommand implements TraceableCommand
 {
     use TraceableMessageCapabilities;
 }
