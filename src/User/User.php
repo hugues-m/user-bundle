@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\User;
 
 use DateTime;
@@ -171,8 +173,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
         $plainPassword,
         UserPasswordEncoderInterface $encoder,
         array $roles = ['ROLE_USER']
-    ): User
-    {
+    ): User {
         $user = new static($username, $email, $plainPassword, $encoder, $roles);
         $user->recordUserRegistered();
         $user->enabled = true;
@@ -310,7 +311,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     }
 
     /**
-     * Enable
+     * Enable.
      */
     public function enable()
     {
@@ -318,7 +319,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     }
 
     /**
-     * Disable
+     * Disable.
      */
     public function disable()
     {
@@ -326,9 +327,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     }
 
     /**
-     *
      * @return bool
-     *
      */
     public function isEmailConfirmed(): bool
     {
@@ -413,8 +412,8 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
 
     /**
      * Generate token string for salt, email validation or password resetting.
-     * @return string
      *
+     * @return string
      */
     private function generateToken(): string
     {
@@ -447,7 +446,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     }
 
     /**
-     * Getter de lastLogin
+     * Getter de lastLogin.
      *
      * @return DateTime
      */
@@ -457,7 +456,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     }
 
     /**
-     * Getter de confirmationToken
+     * Getter de confirmationToken.
      *
      * @return string
      */
@@ -467,7 +466,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     }
 
     /**
-     * Getter de resettingToken
+     * Getter de resettingToken.
      *
      * @return string
      */
@@ -477,7 +476,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     }
 
     /**
-     * Getter de created
+     * Getter de created.
      *
      * @return DateTime
      */
@@ -487,7 +486,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     }
 
     /**
-     * Getter de updated
+     * Getter de updated.
      *
      * @return DateTime
      */

@@ -1,11 +1,13 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\Event;
 
 use HMLB\DDD\Entity\Identity;
 
 /**
- * EmailConfirmed
+ * EmailConfirmed.
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
@@ -28,7 +30,7 @@ final class EmailConfirmed extends UserEvent
     }
 
     /**
-     * Getter de email
+     * Getter de email.
      *
      * @return string
      */

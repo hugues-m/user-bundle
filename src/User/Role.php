@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\User;
 
 use Symfony\Component\Security\Core\Role\RoleInterface;

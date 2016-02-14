@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\Tests\Command;
 
 use HMLB\UserBundle\Tests\Functional\TestCommandExecutionCapabilities;

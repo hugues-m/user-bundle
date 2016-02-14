@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\Event;
 
 use HMLB\DDD\Entity\Identity;

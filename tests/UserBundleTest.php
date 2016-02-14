@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\Tests;
 
 use Doctrine\ORM\EntityManager;

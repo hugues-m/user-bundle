@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\Command;
 
 use HMLB\DDD\Entity\Identity;
@@ -42,7 +44,7 @@ final class ResetPassword extends UserCommand
     }
 
     /**
-     * Getter de resetToken
+     * Getter de resetToken.
      *
      * @return string
      */

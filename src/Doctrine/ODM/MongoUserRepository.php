@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\Doctrine\ODM;
 
 use Doctrine\ODM\MongoDB\DocumentManager;

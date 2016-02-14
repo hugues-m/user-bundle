@@ -1,11 +1,13 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\Event;
 
 use HMLB\DDD\Entity\Identity;
 
 /**
- * PasswordResetRequested
+ * PasswordResetRequested.
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
@@ -28,7 +30,7 @@ final class PasswordResetRequested extends UserEvent
     }
 
     /**
-     * Getter de resetToken
+     * Getter de resetToken.
      *
      * @return string
      */

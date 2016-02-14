@@ -1,11 +1,13 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\Event;
 
 use HMLB\DDD\Entity\Identity;
 
 /**
- * EmailValidationRequested
+ * EmailValidationRequested.
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
@@ -28,7 +30,7 @@ final class EmailValidationRequested extends UserEvent
     }
 
     /**
-     * Getter de validationToken
+     * Getter de validationToken.
      *
      * @return string
      */

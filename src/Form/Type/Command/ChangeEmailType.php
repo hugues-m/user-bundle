@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\Form\Type\Command;
 
 use HMLB\UserBundle\Command\ChangeEmail;

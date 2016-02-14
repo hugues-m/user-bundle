@@ -1,9 +1,11 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace HMLB\UserBundle\Message;
 
 /**
- * Trait UserMessageNaming
+ * Trait UserMessageNaming.
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
