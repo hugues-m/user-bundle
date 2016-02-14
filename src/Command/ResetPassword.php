@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Command;
+namespace HMLB\UserBundle\Command;
 
 use HMLB\DDD\Entity\Identity;
 
@@ -9,7 +9,7 @@ use HMLB\DDD\Entity\Identity;
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
-final class ResetPassword
+final class ResetPassword extends UserCommand
 {
     /**
      * @var string

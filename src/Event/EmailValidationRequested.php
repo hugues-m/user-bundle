@@ -5,11 +5,11 @@ namespace HMLB\UserBundle\Event;
 use HMLB\DDD\Entity\Identity;
 
 /**
- * PasswordResetRequested
+ * EmailValidationRequested
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
-final class PasswordResetRequested extends UserEvent
+final class EmailValidationRequested extends UserEvent
 {
     /**
      * @var Identity
@@ -19,22 +19,22 @@ final class PasswordResetRequested extends UserEvent
     /**
      * @var string
      */
-    private $resetToken;
+    private $validationToken;
 
-    public function __construct(Identity $userId, string $resetToken)
+    public function __construct(Identity $userId, string $validationToken)
     {
         $this->userId = $userId;
-        $this->resetToken = $resetToken;
+        $this->validationToken = $validationToken;
     }
 
     /**
-     * Getter de resetToken
+     * Getter de validationToken
      *
      * @return string
      */
-    public function getResetToken()
+    public function getValidationToken()
     {
-        return $this->resetToken;
+        return $this->validationToken;
     }
 
     /**

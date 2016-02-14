@@ -6,8 +6,10 @@ use HMLB\DDDBundle\Repository\PersistentCommandRepository;
 use HMLB\DDDBundle\Repository\PersistentEventRepository;
 use HMLB\UserBundle\Command\ChangeEmail;
 use HMLB\UserBundle\Command\ChangePassword;
+use HMLB\UserBundle\Command\ConfirmEmail;
 use HMLB\UserBundle\Command\RegisterUser;
 use HMLB\UserBundle\Event\EmailChanged;
+use HMLB\UserBundle\Event\EmailConfirmed;
 use HMLB\UserBundle\Event\PasswordChanged;
 use HMLB\UserBundle\Event\UserRegistered;
 use HMLB\UserBundle\User\Role;
@@ -124,6 +126,42 @@ class UserCommandsTest extends AbstractCommandTest
         $this->assertInstanceOf(EmailChanged::class, $event);
         $this->assertEquals($beforeEmail, $event->getOldEmail());
         $this->assertEquals($afterEmail, $event->getNewEmail());
+
+        $foundEvent = $eventRepository->get($event->getId());
+        $this->assertSame($event, $foundEvent);
+    }
+
+    /**
+     * @test
+     */
+    public function usersCanValidateEmail()
+    {
+        $register = new RegisterUser('test', 'test@hmlb.fr', '123', [new Role('ROLE_USER')]);
+        $this->getCommandBus()->handle($register);
+
+        $user = $this->getUserRepository()->getByUsername($register->getUsername());
+        $this->assertFalse($user->isEmailConfirmed());
+        $command = new ConfirmEmail($user->getConfirmationToken(), $user->getId());
+
+        $commandRepo = $this->getCommandRepository();
+        $this->handleCommandAndAssertTraced(
+            $this->getCommandBus(),
+            $command,
+            $commandRepo
+        );
+
+        $this->assertTrue($user->isEmailConfirmed());
+
+        $eventRepository = $this->getEventRepository();
+
+        $foundEvents = $eventRepository->getByMessage(EmailConfirmed::class);
+        $this->assertCount(1, $foundEvents);
+
+        /** @var EmailConfirmed $event */
+        $event = $foundEvents[0];
+        $this->assertInstanceOf(EmailConfirmed::class, $event);
+        $this->assertEquals($user->getId(), $event->getUserId());
+        $this->assertEquals($user->getEmail(), $event->getEmail());
 
         $foundEvent = $eventRepository->get($event->getId());
         $this->assertSame($event, $foundEvent);

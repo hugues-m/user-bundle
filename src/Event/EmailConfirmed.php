@@ -1,9 +1,8 @@
 <?php
 
-namespace src\Event;
+namespace HMLB\UserBundle\Event;
 
 use HMLB\DDD\Entity\Identity;
-use HMLB\UserBundle\Event\UserEvent;
 
 /**
  * EmailConfirmed

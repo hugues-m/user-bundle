@@ -24,6 +24,7 @@
         <field name="expired" type="boolean" nullable="false"/>
         <field name="expiresAt" type="datetime" nullable="true"/>
         <field name="confirmationToken" type="string" nullable="true"/>
+        <field name="resettingToken" type="string" nullable="true"/>
         <field name="passwordRequestedAt" type="datetime" nullable="true"/>
         <field name="roles" type="array" nullable="false"/>
         <field name="credentialsExpired" type="boolean" nullable="false"/>

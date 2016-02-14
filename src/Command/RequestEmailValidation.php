@@ -5,11 +5,11 @@ namespace HMLB\UserBundle\Command;
 use HMLB\DDD\Entity\Identity;
 
 /**
- * Request a password reset procedure after forgetting it.
+ * Request an email validation process for a given user.
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
-final class RequestPasswordReset extends UserCommand
+final class RequestEmailValidation extends UserCommand
 {
     /**
      * @var Identity

@@ -7,8 +7,16 @@ use HMLB\DDD\Entity\AggregateRoot;
 use HMLB\DDD\Entity\Identity;
 use HMLB\DDD\Validation\Assertion;
 use HMLB\UserBundle\Event\EmailChanged;
+use HMLB\UserBundle\Event\EmailConfirmed;
+use HMLB\UserBundle\Event\EmailValidationRequested;
 use HMLB\UserBundle\Event\PasswordChanged;
+use HMLB\UserBundle\Event\PasswordReset;
+use HMLB\UserBundle\Event\PasswordResetRequested;
 use HMLB\UserBundle\Event\UserRegistered;
+use HMLB\UserBundle\Exception\EmailAlreadyConfirmedException;
+use HMLB\UserBundle\Exception\InvalidEmailConfirmationTokenException;
+use HMLB\UserBundle\Exception\InvalidPasswordResettingTokenException;
+use HMLB\UserBundle\Exception\PasswordResettingNotRequestedException;
 use SimpleBus\Message\Recorder\ContainsRecordedMessages;
 use SimpleBus\Message\Recorder\PrivateMessageRecorderCapabilities;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -80,6 +88,13 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     protected $confirmationToken;
 
     /**
+     * Random string sent to the user email address in order to reset the password.
+     *
+     * @var string
+     */
+    protected $resettingToken;
+
+    /**
      * @var DateTime
      */
     protected $passwordRequestedAt;
@@ -125,21 +140,27 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
      * @param string                       $plainPassword
      * @param UserPasswordEncoderInterface $encoder
      * @param array                        $roles
+     * @param bool                         $enable
      */
     protected function __construct(
         string $username,
         string $email,
         string $plainPassword,
         UserPasswordEncoderInterface $encoder,
-        array $roles = []
+        array $roles = [],
+        bool $enable = true
     ) {
         Assertion::email($email);
         $this->id = new Identity();
         $this->roles = $roles;
-        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->salt = $this->generateToken();
+        $this->confirmationToken = $this->generateToken();
         $this->created = new DateTime();
         $this->username = $username;
         $this->email = $email;
+        if ($enable) {
+            $this->enable();
+        }
         $this->updateCanonicalFields();
         $this->updatePassword($plainPassword, $encoder);
     }
@@ -157,11 +178,6 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
         $user->enabled = true;
 
         return $user;
-    }
-
-    protected function recordUserRegistered()
-    {
-        $this->record(new UserRegistered($this->getId(), $this->getEmail(), $this->getUsername()));
     }
 
     /**
@@ -259,34 +275,6 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function isEnabled(): bool
-    {
-        return $this->enabled;
-    }
-
-    public function enable()
-    {
-        $this->enabled = true;
-        $this->confirmationToken = null;
-    }
-
-    public function disable()
-    {
-        $this->enabled = false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    private function updateCanonicalFields()
-    {
-        $this->usernameCanonical = self::canonicalize($this->username);
-        $this->emailCanonical = self::canonicalize($this->email);
-    }
-
-    /**
      * Change the email address of the user.
      *
      * @param string $email
@@ -314,12 +302,128 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Enable
+     */
+    public function enable()
+    {
+        $this->enabled = true;
+    }
+
+    /**
+     * Disable
+     */
+    public function disable()
+    {
+        $this->enabled = false;
+    }
+
+    /**
+     *
+     * @return bool
+     *
+     */
+    public function isEmailConfirmed(): bool
+    {
+        return null === $this->confirmationToken;
+    }
+
+    public function requestEmailConfirmation()
+    {
+        $this->confirmationToken = $this->generateToken();
+        $this->updated = new DateTime();
+        $this->record(new EmailValidationRequested($this->id, $this->confirmationToken));
+    }
+
+    public function confirmEmail(string $confirmationToken)
+    {
+        if ($this->isEmailConfirmed()) {
+            throw new EmailAlreadyConfirmedException();
+        }
+
+        if ($confirmationToken !== $this->confirmationToken) {
+            throw new InvalidEmailConfirmationTokenException();
+        }
+
+        $this->confirmationToken = null;
+        $this->updated = new DateTime();
+        $this->record(new EmailConfirmed($this->id, $this->email));
+    }
+
+    public function isPasswordResetRequested(): bool
+    {
+        return null !== $this->resettingToken;
+    }
+
+    public function requestPasswordReset()
+    {
+        $this->resettingToken = $this->generateToken();
+        $this->passwordRequestedAt = new DateTime();
+        $this->updated = new DateTime();
+        $this->record(new PasswordResetRequested($this->id, $this->resettingToken));
+    }
+
+    public function resetPassword(string $resettingToken, string $password, UserPasswordEncoderInterface $encoder)
+    {
+        if (!$this->isPasswordResetRequested()) {
+            throw new PasswordResettingNotRequestedException();
+        }
+
+        if ($resettingToken !== $this->resettingToken) {
+            throw new InvalidPasswordResettingTokenException();
+        }
+
+        $this->resettingToken = null;
+
+        $oldPassword = $this->password;
+        $this->updatePassword($password, $encoder);
+        $this->updated = new DateTime();
+        $this->record(new PasswordReset($this->id, $oldPassword, $password));
+
+        //We validate email if password has been confirmed because the token has been sent to the email adress.
+        if (!$this->isEmailConfirmed()) {
+            $this->confirmEmail($this->confirmationToken);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    private function updateCanonicalFields()
+    {
+        $this->usernameCanonical = self::canonicalize($this->username);
+        $this->emailCanonical = self::canonicalize($this->email);
+    }
+
+    /**
      * @param string                       $plainPassword
      * @param UserPasswordEncoderInterface $encoder
      */
     private function updatePassword(string $plainPassword, UserPasswordEncoderInterface $encoder)
     {
         $this->password = $encoder->encodePassword($this, $plainPassword);
+    }
+
+    /**
+     * Generate token string for salt, email validation or password resetting.
+     * @return string
+     *
+     */
+    private function generateToken(): string
+    {
+        return base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+    }
+
+    protected function recordUserRegistered()
+    {
+        $this->record(new UserRegistered($this->getId(), $this->getEmail(), $this->getUsername()));
     }
 
     /**
@@ -340,5 +444,55 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    /**
+     * Getter de lastLogin
+     *
+     * @return DateTime
+     */
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * Getter de confirmationToken
+     *
+     * @return string
+     */
+    public function getConfirmationToken()
+    {
+        return $this->confirmationToken;
+    }
+
+    /**
+     * Getter de resettingToken
+     *
+     * @return string
+     */
+    public function getResettingToken()
+    {
+        return $this->resettingToken;
+    }
+
+    /**
+     * Getter de created
+     *
+     * @return DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Getter de updated
+     *
+     * @return DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 }
