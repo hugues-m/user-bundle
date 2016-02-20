@@ -385,7 +385,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
         $oldPassword = $this->password;
         $this->updatePassword($password, $encoder);
         $this->updated = new DateTime();
-        $this->record(new PasswordReset($this->id, $oldPassword, $password));
+        $this->record(new PasswordReset($this->id, $oldPassword, $this->getPassword()));
 
         //We validate email if password has been confirmed because the token has been sent to the email adress.
         if (!$this->isEmailConfirmed()) {

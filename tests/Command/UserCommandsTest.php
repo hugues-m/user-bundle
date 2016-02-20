@@ -12,10 +12,14 @@ use HMLB\UserBundle\Command\ChangePassword;
 use HMLB\UserBundle\Command\ConfirmEmail;
 use HMLB\UserBundle\Command\RegisterUser;
 use HMLB\UserBundle\Command\RequestEmailValidation;
+use HMLB\UserBundle\Command\RequestPasswordReset;
+use HMLB\UserBundle\Command\ResetPassword;
 use HMLB\UserBundle\Event\EmailChanged;
 use HMLB\UserBundle\Event\EmailConfirmed;
 use HMLB\UserBundle\Event\EmailValidationRequested;
 use HMLB\UserBundle\Event\PasswordChanged;
+use HMLB\UserBundle\Event\PasswordReset;
+use HMLB\UserBundle\Event\PasswordResetRequested;
 use HMLB\UserBundle\Event\UserRegistered;
 use HMLB\UserBundle\User\Role;
 use HMLB\UserBundle\User\User;
@@ -150,11 +154,10 @@ class UserCommandsTest extends AbstractCommandTest
 
         $command = new RequestEmailValidation($user->getId());
 
-        $commandRepo = $this->getCommandRepository();
         $this->handleCommandAndAssertTraced(
             $this->getCommandBus(),
             $command,
-            $commandRepo
+            $this->getCommandRepository()
         );
 
         $this->assertFalse($user->isEmailConfirmed());
@@ -163,6 +166,71 @@ class UserCommandsTest extends AbstractCommandTest
         $event = $this->getEvent(EmailValidationRequested::class);
         $this->assertEquals($user->getId(), $event->getUserId());
         $this->assertEquals($user->getConfirmationToken(), $event->getValidationToken());
+    }
+
+    /**
+     * @test
+     */
+    public function passwordResetCanBeRequested()
+    {
+        $register = new RegisterUser('test', 'test@hmlb.fr', '123', [new Role('ROLE_USER')]);
+        $this->getCommandBus()->handle($register);
+
+        $user = $this->getUserRepository()->getByUsername($register->getUsername());
+
+        $this->assertFalse($user->isPasswordResetRequested());
+        $this->assertEmpty($user->getResettingToken());
+
+        $command = new RequestPasswordReset($user->getId());
+
+        $this->handleCommandAndAssertTraced(
+            $this->getCommandBus(),
+            $command,
+            $this->getCommandRepository()
+        );
+
+        $this->assertTrue($user->isPasswordResetRequested());
+        $this->assertNotEmpty($user->getResettingToken());
+
+        /** @var PasswordResetRequested $event */
+        $event = $this->getEvent(PasswordResetRequested::class);
+        $this->assertEquals($user->getId(), $event->getUserId());
+        $this->assertEquals($user->getResettingToken(), $event->getResetToken());
+    }
+
+    /**
+     * @test
+     */
+    public function passwordCanBeReset()
+    {
+        $register = new RegisterUser('test', 'test@hmlb.fr', '123', [new Role('ROLE_USER')]);
+        $this->getCommandBus()->handle($register);
+
+        $user = $this->getUserRepository()->getByUsername($register->getUsername());
+
+        $request = new RequestPasswordReset($user->getId());
+        $this->getCommandBus()->handle($request);
+
+        $command = new ResetPassword('456', $user->getResettingToken(), $user->getId());
+
+        $beginningPwd = $user->getPassword();
+        $this->handleCommandAndAssertTraced(
+            $this->getCommandBus(),
+            $command,
+            $this->getCommandRepository()
+        );
+
+        $endPwd = $user->getPassword();
+
+        $this->assertFalse($user->isPasswordResetRequested());
+        $this->assertEmpty($user->getResettingToken());
+        $this->assertNotEquals($beginningPwd, $endPwd);
+
+        /** @var PasswordReset $event */
+        $event = $this->getEvent(PasswordReset::class);
+        $this->assertEquals($user->getId(), $event->getUserId());
+        $this->assertEquals($beginningPwd, $event->getOldPassword());
+        $this->assertEquals($endPwd, $event->getNewPassword());
     }
 
     /**
