@@ -173,7 +173,8 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
         $plainPassword,
         UserPasswordEncoderInterface $encoder,
         array $roles = ['ROLE_USER']
-    ): User {
+    ): User
+    {
         $user = new static($username, $email, $plainPassword, $encoder, $roles);
         $user->recordUserRegistered();
         $user->enabled = true;
@@ -417,7 +418,7 @@ class User implements AdvancedUserInterface, AggregateRoot, ContainsRecordedMess
      */
     private function generateToken(): string
     {
-        return base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        return base_convert(sha1(uniqid((string) mt_rand(), true)), 16, 36);
     }
 
     protected function recordUserRegistered()
