@@ -5,9 +5,10 @@
 
 This bundle integrade simple user registration / login / password forgotten ... in Symfony2 projects.
 
-It is meant to have the same capabilities as the FOSUserBundle but with an opinionated domain driven design.
+It is meant to have the same features as the FOSUserBundle but with an opinionated domain driven design.
 
-This is a work in progress, BC breaks could happen without notice.
+This library is used in production but is under heavy development and is not yet clearly documented. 
+BC breaks could happen without notice.
 
 ## License
 
