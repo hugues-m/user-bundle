@@ -160,6 +160,6 @@ class Context
     {
         $this->requestMethod = $_SERVER['REQUEST_METHOD'];
         $this->host = $_SERVER['HTTP_HOST'];
-        $this->path = $_SERVER['PATH_INFO'];
+        $this->path = $_SERVER['SCRIPT_URL'];
     }
 }
