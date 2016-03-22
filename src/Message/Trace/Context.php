@@ -47,8 +47,8 @@ class Context
 
     public function __construct()
     {
-        $this->phpInterface = php_sapi_name();
-        $this->cli = $this->inCliContext();
+        $this->phpInterface = self::getSapiName();
+        $this->cli = self::inCliContext();
         if ($this->cli) {
             $this->getCliInfo();
         } else {
@@ -116,10 +116,6 @@ class Context
         return $this->host;
     }
 
-    private function inCliContext(): bool
-    {
-        return 'cli' === $this->phpInterface || defined('STDIN');
-    }
 
     private function getCliInfo()
     {
@@ -161,5 +157,15 @@ class Context
         $this->requestMethod = $_SERVER['REQUEST_METHOD'];
         $this->host = $_SERVER['HTTP_HOST'];
         $this->path = $_SERVER['SCRIPT_URL'];
+    }
+
+    public static function inCliContext(): bool
+    {
+        return 'cli' === self::getSapiName() || defined('STDIN');
+    }
+
+    private static function getSapiName(): string
+    {
+        return php_sapi_name();
     }
 }

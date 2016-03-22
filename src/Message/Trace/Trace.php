@@ -75,6 +75,23 @@ class Trace
     }
 
     /**
+     * Message trace when a message has been initiated by php HTTP interface without domain user.
+     *
+     * @return Trace
+     *
+     * @throws Exception
+     */
+    public static function http()
+    {
+        $context = new Context();
+        if ($context->isCli()) {
+            throw new Exception('Not in php HTTP context');
+        }
+
+        return new self($context);
+    }
+
+    /**
      * Trace Context.
      *
      * @return Context

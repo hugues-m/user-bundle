@@ -6,6 +6,7 @@ namespace HMLB\UserBundle\MessageBus\Middleware;
 
 use HMLB\DDD\Exception\AggregateRootNotFoundException;
 use HMLB\DDD\Message\Message;
+use HMLB\UserBundle\Message\Trace\Context;
 use HMLB\UserBundle\Message\Trace\Trace;
 use HMLB\UserBundle\Message\TraceableMessage;
 use HMLB\UserBundle\User\UserRepository;
@@ -61,7 +62,11 @@ class TracesMessages implements MessageBusMiddleware
             $user = $this->userRepository->getCurrentUser();
             $trace = Trace::user($user);
         } catch (AggregateRootNotFoundException $e) {
-            $trace = Trace::cli();
+            if (Context::inCliContext()) {
+                $trace = Trace::cli();
+            } else {
+                $trace = Trace::http();
+            }
         }
 
         $message->trace($trace);
